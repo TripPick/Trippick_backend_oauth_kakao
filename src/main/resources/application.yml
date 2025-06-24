@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: trippick_oauth_kakao
+  profiles:
+    active: local

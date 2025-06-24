@@ -1,0 +1,60 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    # 데이터베이스 연결을 위한 URL입니다.
+    # 서비스 이름(k8s-external-user-mysqlservice)을 사용하여 클러스터 내부에서 통신합니다.
+    url: jdbc:mysql://localhost:3306/trippick?serverTimezone=UTC&characterEncoding=UTF-8
+    # 데이터베이스 사용자 이름입니다.
+    username: root
+    # 데이터베이스 비밀번호입니다.
+    password: 1234
+    # JDBC 드라이버 클래스 이름입니다.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # HikariCP 커넥션 풀 설정입니다.
+    hikari:
+      # 커넥션이 유효한지 확인하기 위한 테스트 쿼리입니다.
+      connection-test-query: SELECT 1 # HikariCP 유효성 검사 추가
+      # 커넥션 유효성 검사 타임아웃 시간(밀리초)입니다.
+      validation-timeout: 5000
+
+  jpa:
+    hibernate:
+      # 애플리케이션 시작 시 데이터베이스 스키마 처리 방식입니다.
+      # create: 기존 테이블 삭제 후 다시 생성 (오직 테스트 환경에서만 사용해야 합니다.)
+      ddl-auto: create
+    # DDL(데이터 정의어) 생성 여부입니다.
+    generate-ddl: true
+    # 실행되는 SQL 쿼리를 콘솔에 표시합니다.
+    show-sql: true
+    # OSIV(Open Session In View) 패턴 사용 여부입니다.
+    # false로 설정하는 것이 성능 및 예기치 않은 동작 방지에 권장됩니다.
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 0eaeed688e2125753c1a0ebf4df023be
+            client-secret: R8SJIrR9vC8lipNifZFSD93q9NxRRpXc
+            redirect-uri: http://localhost:8085/api/user/v1/auth/kakao/callback
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+jwt:
+  expires-in: 86400 # 1day
+  mobile-expires-in: 31536000 # 1year
+  tablet-expires-in: 31536000
+  secret: trippickjwtsecretkey2025verysecuretrippickjwtsecretkey2025verysecure
