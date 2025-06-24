@@ -38,8 +38,8 @@ spring:
       client:
         registration:
           kakao:
-            client-id: 
-            client-secret: 
+            client-id: client-id
+            client-secret: client-secret
             redirect-uri: http://localhost:8085/api/user/v1/auth/kakao/callback
             client-name: Kakao
             authorization-grant-type: authorization_code
