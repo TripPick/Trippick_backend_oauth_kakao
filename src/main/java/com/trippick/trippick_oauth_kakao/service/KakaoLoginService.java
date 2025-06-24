@@ -5,6 +5,7 @@ import com.trippick.trippick_oauth_kakao.domain.entity.KakaoUserEntity;
 import com.trippick.trippick_oauth_kakao.domain.repository.KakaoUserRepository;
 import com.trippick.trippick_oauth_kakao.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,15 @@ public class KakaoLoginService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final KakaoUserRepository userRepository;
     private final JwtUtil jwtUtil;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String clientSecret;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String redirectUri;
 
     /**
      * OAuth2 인증 코드를 사용하여 카카오 로그인 처리
@@ -103,10 +113,10 @@ public class KakaoLoginService {
         
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "0eaeed688e2125753c1a0ebf4df023be");
-        params.add("client_secret", "R8SJIrR9vC8lipNifZFSD93q9NxRRpXc");
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
         params.add("code", code);
-        params.add("redirect_uri", "http://localhost:8085/api/user/v1/auth/kakao/callback");
+        params.add("redirect_uri", redirectUri);
         
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
         
